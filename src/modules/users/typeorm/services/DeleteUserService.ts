@@ -6,7 +6,7 @@ interface IRequest {
   id: string;
 }
 
-class DeleteProductService {
+class DeleteUserService {
   public async execute({ id }: IRequest): Promise<string> {
     const usersRepository = getCustomRepository(UsersRepository);
     const userExist = await usersRepository.findById(id);
@@ -21,4 +21,4 @@ class DeleteProductService {
   }
 }
 
-export default DeleteProductService;
+export default DeleteUserService;
