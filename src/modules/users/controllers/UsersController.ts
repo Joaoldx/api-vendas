@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import ListUserService from '../services/ListUserService';
-import CreateUserService from '../services/CreateUserService';
-import DeleteUserService from '../services/DeleteUserService';
+import ListUserService from '../typeorm/services/ListUserService';
+import CreateUserService from '../typeorm/services/CreateUserService';
+import DeleteUserService from '../typeorm/services/DeleteUserService';
 
 export default class UserController {
   public async index(request: Request, response: Response) {
