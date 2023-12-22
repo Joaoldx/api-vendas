@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
 import UserController from '../controllers/UsersController';
+import isAutenticated from '../middlewares/isAuthenticated';
 
 const usersRouter = Router();
 const usersController = new UserController();
 
-usersRouter.get('/', usersController.index);
+usersRouter.get('/', isAutenticated, usersController.index);
 
 usersRouter.post(
   '/',
@@ -21,6 +22,7 @@ usersRouter.post(
 
 usersRouter.delete(
   '/:id',
+  isAutenticated,
   celebrate({
     [Segments.PARAMS]: {
       id: Joi.string().uuid().required(),

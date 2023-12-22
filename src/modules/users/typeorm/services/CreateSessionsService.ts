@@ -4,6 +4,7 @@ import { UsersRepository } from '../repositories/UsersRepository';
 import User from '../entities/User';
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
+import authConfig from '@config/auth';
 
 interface IRequest {
   email: string;
@@ -30,9 +31,9 @@ class CreateSessionsService {
       throw new AppError('Senha inválida', 401);
     }
 
-    const token = sign({}, 'ae3d097b0f743386b6ea28ed11ef4264', {
+    const token = sign({}, authConfig.jwt.secret, {
       subject: user.id,
-      expiresIn: '1d',
+      expiresIn: authConfig.jwt.expires,
     });
 
     return { token, user };
