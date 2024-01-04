@@ -25,7 +25,7 @@ class CreateSessionsService {
       throw new AppError('Email ou senha inválidos', 401);
     }
 
-    const passwordConfirmed = compare(password, user.password);
+    const passwordConfirmed = await compare(password, user.password);
 
     if (!passwordConfirmed) {
       throw new AppError('Senha inválida', 401);
