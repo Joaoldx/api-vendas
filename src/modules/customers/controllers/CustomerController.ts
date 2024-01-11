@@ -17,9 +17,9 @@ export default class CustomerController {
   public async show(request: Request, response: Response): Promise<Response> {
     const { id } = request.params;
 
-    const showProduct = new ShowCustomerService();
+    const showCustomer = new ShowCustomerService();
 
-    const customer = await showProduct.execute({ id });
+    const customer = await showCustomer.execute({ id });
 
     return response.json(customer);
   }
@@ -27,9 +27,9 @@ export default class CustomerController {
   public async create(request: Request, response: Response): Promise<Response> {
     const { name, email } = request.body;
 
-    const createProduct = new CreateCustomerService();
+    const createCustomer = new CreateCustomerService();
 
-    const customer = await createProduct.execute({ name, email });
+    const customer = await createCustomer.execute({ name, email });
 
     return response.json(customer);
   }
@@ -38,9 +38,9 @@ export default class CustomerController {
     const { name, email } = request.body;
     const { id } = request.params;
 
-    const updateProduct = new UpdateCustomerService();
+    const updateCustomer = new UpdateCustomerService();
 
-    const customer = await updateProduct.execute({ id, name, email });
+    const customer = await updateCustomer.execute({ id, name, email });
 
     return response.json(customer);
   }
@@ -48,9 +48,9 @@ export default class CustomerController {
   public async delete(request: Request, response: Response): Promise<Response> {
     const { id } = request.params;
 
-    const deleteProduct = new DeleteCustomerService();
+    const deleteCustomer = new DeleteCustomerService();
 
-    await deleteProduct.execute({ id });
+    await deleteCustomer.execute({ id });
 
     return response.json([]);
   }
