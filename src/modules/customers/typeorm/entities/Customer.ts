@@ -14,7 +14,7 @@ class Customer {
   @Column()
   name: string;
 
-  @Column('')
+  @Column()
   email: string;
 
   @CreateDateColumn()
