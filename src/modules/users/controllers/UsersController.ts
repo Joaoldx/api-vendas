@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import ListUserService from '../typeorm/services/ListUserService';
 import CreateUserService from '../typeorm/services/CreateUserService';
 import DeleteUserService from '../typeorm/services/DeleteUserService';
+import { instanceToInstance } from 'class-transformer';
 
 export default class UserController {
   public async index(request: Request, response: Response) {
@@ -9,7 +10,7 @@ export default class UserController {
 
     const users = await listUser.execute();
 
-    return response.json(users);
+    return response.json(instanceToInstance(users));
   }
 
   public async create(request: Request, response: Response) {

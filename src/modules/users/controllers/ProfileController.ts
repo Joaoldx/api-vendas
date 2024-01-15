@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import ShowProfileService from '../typeorm/services/ShowProfileService';
 import UpdateProfileService from '../typeorm/services/UpdateProfileService';
+import { instanceToInstance } from 'class-transformer';
 
 export default class ProfileController {
   public async show(request: Request, response: Response) {
@@ -9,7 +10,7 @@ export default class ProfileController {
 
     const user = await showProfile.execute({ user_id });
 
-    return response.json(user);
+    return response.json(instanceToInstance(user));
   }
 
   public async update(request: Request, response: Response) {
