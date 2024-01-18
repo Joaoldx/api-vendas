@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import ShowProfileService from '../typeorm/services/ShowProfileService';
-import UpdateProfileService from '../typeorm/services/UpdateProfileService';
 import { instanceToInstance } from 'class-transformer';
+import ShowProfileService from '../../typeorm/services/ShowProfileService';
+import UpdateProfileService from '../../typeorm/services/UpdateProfileService';
 
 export default class ProfileController {
   public async show(request: Request, response: Response) {

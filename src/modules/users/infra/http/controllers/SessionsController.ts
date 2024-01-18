@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import CreateSessionsService from '../typeorm/services/CreateSessionsService';
 import { instanceToInstance } from 'class-transformer';
+import CreateSessionsService from '../../typeorm/services/CreateSessionsService';
 
 export default class SessionsController {
   public async create(request: Request, response: Response) {

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import SendForgotPasswordEmailService from '../typeorm/services/SendForgotPasswordEmailService';
+import SendForgotPasswordEmailService from '../../typeorm/services/SendForgotPasswordEmailService';
 
 export default class ForgotPasswordController {
   public async create(request: Request, response: Response) {
