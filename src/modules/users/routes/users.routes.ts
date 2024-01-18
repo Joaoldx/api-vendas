@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
 import UserController from '../controllers/UsersController';
-import isAutenticated from '@shared/http/middlewares/isAuthenticated';
+import isAutenticated from '@shared/infra/http/middlewares/isAuthenticated';
 import uploadConfig from '@config/upload';
 import multer from 'multer';
 import UsersAvatarController from '../controllers/UsersAvatarController';
