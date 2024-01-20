@@ -1,0 +1,12 @@
+import { ICreateUser } from '../models/ICreateUser';
+import { IUser } from '../models/IUser';
+
+export interface IUsersRepository {
+  findAll(): Promise<IUser[]>;
+  findById(id: string): Promise<IUser | undefined>;
+  findByEmail(email: string): Promise<IUser | undefined>;
+  findByName(name: string): Promise<IUser | undefined>;
+  create(data: ICreateUser): Promise<IUser>;
+  save(data: IUser): Promise<IUser>;
+  delete(data: IUser): Promise<void>;
+}
