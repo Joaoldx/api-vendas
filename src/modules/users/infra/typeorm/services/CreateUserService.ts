@@ -1,19 +1,19 @@
-import { getCustomRepository } from 'typeorm';
 import AppError from '@shared/errors/AppError';
-import { UsersRepository } from '../repositories/UsersRepository';
-import User from '../entities/User';
 import { hash } from 'bcryptjs';
+import { inject, injectable } from 'tsyringe';
+import { IUsersRepository } from '@modules/users/domain/repositories/IUsersRepository';
+import { ICreateUser } from '@modules/users/domain/models/ICreateUser';
+import { IUser } from '@modules/users/domain/models/IUser';
 
-interface IRequest {
-  name: string;
-  email: string;
-  password: string;
-}
-
+@injectable()
 class CreateUserService {
-  public async execute({ name, email, password }: IRequest): Promise<User> {
-    const usersRepository = getCustomRepository(UsersRepository);
-    const emailExists = await usersRepository.findByEmail(email);
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+  ) {}
+
+  public async execute({ name, email, password }: ICreateUser): Promise<IUser> {
+    const emailExists = await this.usersRepository.findByEmail(email);
 
     if (emailExists) {
       throw new AppError('Já existe um email cadastrado');
@@ -21,13 +21,12 @@ class CreateUserService {
 
     const hashedPassword = await hash(password, 8);
 
-    const user = usersRepository.create({
+    const user = this.usersRepository.create({
       name,
       email,
       password: hashedPassword,
     });
 
-    await usersRepository.save(user);
     return user;
   }
 }

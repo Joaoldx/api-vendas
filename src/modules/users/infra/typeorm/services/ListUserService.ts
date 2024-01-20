@@ -1,14 +1,18 @@
-import { getCustomRepository } from 'typeorm';
-import { UsersRepository } from '../repositories/UsersRepository';
-import User from '../entities/User';
+import { inject, injectable } from 'tsyringe';
+import { IUsersRepository } from '@modules/users/domain/repositories/IUsersRepository';
+import { IUser } from '@modules/users/domain/models/IUser';
 
+@injectable()
 class ListUserService {
-  public async execute(): Promise<User[]> {
-    const usersRepository = getCustomRepository(UsersRepository);
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+  ) {}
 
-    const user = await usersRepository.find();
+  public async execute(): Promise<IUser[]> {
+    const users = await this.usersRepository.findAll();
 
-    return user;
+    return users;
   }
 }
 

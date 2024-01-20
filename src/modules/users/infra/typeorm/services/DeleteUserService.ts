@@ -1,21 +1,23 @@
-import { getCustomRepository } from 'typeorm';
 import AppError from '@shared/errors/AppError';
-import { UsersRepository } from '../repositories/UsersRepository';
+import { inject, injectable } from 'tsyringe';
+import { IDeleteUser } from '@modules/users/domain/models/IDeleteUser';
+import { IUsersRepository } from '@modules/users/domain/repositories/IUsersRepository';
 
-interface IRequest {
-  id: string;
-}
-
+@injectable()
 class DeleteUserService {
-  public async execute({ id }: IRequest): Promise<string> {
-    const usersRepository = getCustomRepository(UsersRepository);
-    const userExist = await usersRepository.findById(id);
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+  ) {}
+
+  public async execute({ id }: IDeleteUser): Promise<string> {
+    const userExist = await this.usersRepository.findById(id);
 
     if (!userExist) {
       throw new AppError('Usuário não existe');
     }
 
-    await usersRepository.remove(userExist);
+    await this.usersRepository.delete(userExist);
 
     return 'Usuário removido com sucesso';
   }
