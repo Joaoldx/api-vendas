@@ -3,10 +3,11 @@ import { instanceToInstance } from 'class-transformer';
 import CreateUserService from '../../typeorm/services/CreateUserService';
 import DeleteUserService from '../../typeorm/services/DeleteUserService';
 import ListUserService from '../../typeorm/services/ListUserService';
+import { container } from 'tsyringe';
 
 export default class UserController {
   public async index(request: Request, response: Response) {
-    const listUser = new ListUserService();
+    const listUser = container.resolve(ListUserService);
 
     const users = await listUser.execute();
 
@@ -16,7 +17,7 @@ export default class UserController {
   public async create(request: Request, response: Response) {
     const { name, email, password } = request.body;
 
-    const createUser = new CreateUserService();
+    const createUser = container.resolve(CreateUserService);
 
     const user = await createUser.execute({
       name,
@@ -30,7 +31,7 @@ export default class UserController {
   public async delete(request: Request, response: Response) {
     const { id } = request.params;
 
-    const deleteUser = new DeleteUserService();
+    const deleteUser = container.resolve(DeleteUserService);
 
     const user = await deleteUser.execute({
       id,
