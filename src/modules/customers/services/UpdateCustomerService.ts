@@ -1,33 +1,35 @@
-import { getCustomRepository } from 'typeorm';
 import AppError from '@shared/errors/AppError';
-import { CustomersRepository } from '../infra/typeorm/repositories/CustomersRepository';
-import Customer from '../infra/typeorm/entities/Customer';
+import { IUpdateCustomer } from '../domain/models/IUpdateCustomer';
+import { inject, injectable } from 'tsyringe';
+import { ICustomersRepository } from '../domain/repositories/ICustomersRepository';
+import { ICustomer } from '../domain/models/ICustomer';
 
-interface IRequest {
-  id: string;
-  name: string;
-  email: string;
-}
-
+@injectable()
 class UpdateCustomerService {
-  public async execute({ id, name, email }: IRequest): Promise<Customer> {
-    const customerRepository = getCustomRepository(CustomersRepository);
+  constructor(
+    @inject('ICustomersRepository')
+    private customerRepository: ICustomersRepository,
+  ) {}
 
-    const customer = await customerRepository.findById(id);
+  public async execute({
+    id,
+    name,
+    email,
+  }: IUpdateCustomer): Promise<ICustomer> {
+    const customer = await this.customerRepository.findById(id);
 
     if (!customer) {
       throw new AppError('Customer não encontrado');
     }
 
-    const userUpdateEmail = await customerRepository.findByEmail(email);
+    const userUpdateEmail = await this.customerRepository.findByEmail(email);
 
     if (userUpdateEmail && userUpdateEmail.id !== id) {
       throw new AppError('Email já cadastrado');
     }
+
     customer.name = name;
     customer.email = email;
-
-    await customerRepository.save(customer);
 
     return customer;
   }
