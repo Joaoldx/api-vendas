@@ -4,6 +4,8 @@ import { ICustomersRepository } from '@modules/customers/domain/repositories/ICu
 import { CustomersRepository } from '@modules/customers/infra/typeorm/repositories/CustomersRepository';
 import { UsersRepository } from '@modules/users/infra/typeorm/repositories/UsersRepository';
 import { IUsersRepository } from '@modules/users/domain/repositories/IUsersRepository';
+import { IUserTokensRepository } from '@modules/users/domain/repositories/IUserTokensRepository';
+import UserTokensRepository from '@modules/users/infra/typeorm/repositories/UserTokenRepository';
 
 container.registerSingleton<ICustomersRepository>(
   'CustomersRepository',
@@ -13,4 +15,9 @@ container.registerSingleton<ICustomersRepository>(
 container.registerSingleton<IUsersRepository>(
   'UsersRepository',
   UsersRepository,
+);
+
+container.registerSingleton<IUserTokensRepository>(
+  'UserTokensRepository',
+  UserTokensRepository,
 );

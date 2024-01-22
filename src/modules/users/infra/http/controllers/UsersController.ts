@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { instanceToInstance } from 'class-transformer';
-import CreateUserService from '../../typeorm/services/CreateUserService';
-import DeleteUserService from '../../typeorm/services/DeleteUserService';
-import ListUserService from '../../typeorm/services/ListUserService';
 import { container } from 'tsyringe';
+import CreateUserService from '@modules/users/services/CreateUserService';
+import DeleteUserService from '@modules/users/services/DeleteUserService';
+import ListUserService from '@modules/users/services/ListUserService';
 
 export default class UserController {
   public async index(request: Request, response: Response) {
