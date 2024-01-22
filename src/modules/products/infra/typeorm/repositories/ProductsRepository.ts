@@ -1,11 +1,10 @@
-import { In, Repository } from 'typeorm';
+import { In, Repository, getRepository } from 'typeorm';
 import { IProductsRepository } from '@modules/products/domain/repositories/IProductsRepository';
 import Product from '../entities/Product';
 import { IFindProducts } from '@modules/products/domain/models/IFindProducts';
 import { ICreateProduct } from '@modules/products/domain/models/ICreateProduct';
 import { IUpdateStockProduct } from '@modules/products/domain/models/IUpdateStockProduct';
 import { IProductPaginate } from '@modules/products/domain/models/IProductPaginate';
-import { dataSource } from '@shared/infra/typeorm';
 
 type SearchParams = {
   page: number;
@@ -17,7 +16,7 @@ class ProductsRepository implements IProductsRepository {
   private ormRepository: Repository<Product>;
 
   constructor() {
-    this.ormRepository = dataSource.getRepository(Product);
+    this.ormRepository = getRepository(Product);
   }
 
   public async create({
@@ -46,16 +45,16 @@ class ProductsRepository implements IProductsRepository {
     await this.ormRepository.save(products);
   }
 
-  public async findByName(name: string): Promise<Product | null> {
-    const product = this.ormRepository.findOneBy({
+  public async findByName(name: string): Promise<Product | undefined> {
+    const product = this.ormRepository.findOne({
       name,
     });
 
     return product;
   }
 
-  public async findById(id: string): Promise<Product | null> {
-    const product = this.ormRepository.findOneBy({ id });
+  public async findById(id: string): Promise<Product | undefined> {
+    const product = this.ormRepository.findOne({ id });
 
     return product;
   }
