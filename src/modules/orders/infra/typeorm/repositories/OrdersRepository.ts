@@ -1,8 +1,10 @@
-import { Repository, getRepository } from 'typeorm';
+import { Repository } from 'typeorm';
 import Order from '../entities/Order';
 import { ICreateOrder } from '@modules/orders/domain/models/ICreateOrder';
 import { IOrdersRepository } from '@modules/orders/domain/repositories/IOrdersRepository';
 import { IOrderPaginate } from '@modules/orders/domain/models/IOrderPaginate';
+import { dataSource } from '@shared/infra/typeorm';
+import { IOrder } from '@modules/orders/domain/models/IOrder';
 
 type SearchParams = {
   page: number;
@@ -14,10 +16,10 @@ class OrdersRepository implements IOrdersRepository {
   private ormRepository: Repository<Order>;
 
   constructor() {
-    this.ormRepository = getRepository(Order);
+    this.ormRepository = dataSource.getRepository(Order);
   }
 
-  public async findById(id: string): Promise<Order | undefined> {
+  public async findById(id: string): Promise<IOrder | null> {
     const order = this.ormRepository.findOne({
       where: { id },
       relations: ['order_products', 'customer'],
