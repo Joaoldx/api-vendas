@@ -1,20 +1,39 @@
-import { Repository, getRepository } from 'typeorm';
+import { Repository } from 'typeorm';
 import Customer from '../entities/Customer';
-import { ICustomersRepository } from '@modules/customers/domain/repositories/ICustomersRepository';
+import {
+  ICustomersRepository,
+  SearchParams,
+} from '@modules/customers/domain/repositories/ICustomersRepository';
 import { ICreateCustomer } from '@modules/customers/domain/models/ICreateCustomer';
-import { IDeleteCustomer } from '@modules/customers/domain/models/IDeleteCustomer';
+import { dataSource } from '@shared/infra/typeorm';
+import { ICustomerPaginate } from '@modules/customers/domain/models/ICustomerPaginate';
 
 export class CustomersRepository implements ICustomersRepository {
   private ormRepository: Repository<Customer>;
 
   constructor() {
-    this.ormRepository = getRepository(Customer);
+    this.ormRepository = dataSource.getRepository(Customer);
   }
 
-  public async findAll(): Promise<Customer[]> {
-    const customers = await this.ormRepository.find();
+  public async findAll({
+    page,
+    skip,
+    take,
+  }: SearchParams): Promise<ICustomerPaginate> {
+    const [customers, count] = await this.ormRepository
+      .createQueryBuilder()
+      .skip(skip)
+      .take(take)
+      .getManyAndCount();
 
-    return customers;
+    const result = {
+      per_page: take,
+      total: count,
+      current_page: page,
+      data: customers,
+    };
+
+    return result;
   }
 
   public async save(customer: Customer): Promise<Customer> {
@@ -35,7 +54,7 @@ export class CustomersRepository implements ICustomersRepository {
     await this.ormRepository.delete(customer);
   }
 
-  public async findByName(name: string): Promise<Customer | undefined> {
+  public async findByName(name: string): Promise<Customer | null> {
     const customer = this.ormRepository.findOne({
       where: {
         name,
@@ -45,7 +64,7 @@ export class CustomersRepository implements ICustomersRepository {
     return customer;
   }
 
-  public async findById(id: string): Promise<Customer | undefined> {
+  public async findById(id: string): Promise<Customer | null> {
     const customer = this.ormRepository.findOne({
       where: {
         id,
@@ -55,7 +74,7 @@ export class CustomersRepository implements ICustomersRepository {
     return customer;
   }
 
-  public async findByEmail(email: string): Promise<Customer | undefined> {
+  public async findByEmail(email: string): Promise<Customer | null> {
     const customer = this.ormRepository.findOne({
       where: {
         email,
