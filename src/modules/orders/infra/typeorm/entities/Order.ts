@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import OrderProducts from './OrderProducts';
+import OrderProducts from './OrdersProducts';
 
 @Entity('orders')
 class Order {
