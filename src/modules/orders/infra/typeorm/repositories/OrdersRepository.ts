@@ -1,36 +1,62 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { Repository, getRepository } from 'typeorm';
 import Order from '../entities/Order';
-import Customer from '@modules/customers/infra/typeorm/entities/Customer';
+import { ICreateOrder } from '@modules/orders/domain/models/ICreateOrder';
+import { IOrdersRepository } from '@modules/orders/domain/repositories/IOrdersRepository';
+import { IOrderPaginate } from '@modules/orders/domain/models/IOrderPaginate';
 
-interface IProduct {
-  product_id: string;
-  price: number;
-  quantity: number;
-}
+type SearchParams = {
+  page: number;
+  skip: number;
+  take: number;
+};
 
-interface IRequest {
-  customer: Customer;
-  products: IProduct[];
-}
+class OrdersRepository implements IOrdersRepository {
+  private ormRepository: Repository<Order>;
 
-@EntityRepository(Order)
-export class OrdersRepository extends Repository<Order> {
+  constructor() {
+    this.ormRepository = getRepository(Order);
+  }
+
   public async findById(id: string): Promise<Order | undefined> {
-    const order = this.findOne(id, {
+    const order = this.ormRepository.findOne({
+      where: { id },
       relations: ['order_products', 'customer'],
     });
 
     return order;
   }
 
-  public async createOrder({ customer, products }: IRequest): Promise<Order> {
-    const order = this.create({
+  public async findAll({
+    page,
+    skip,
+    take,
+  }: SearchParams): Promise<IOrderPaginate> {
+    const [orders, count] = await this.ormRepository
+      .createQueryBuilder()
+      .skip(skip)
+      .take(take)
+      .getManyAndCount();
+
+    const result = {
+      per_page: take,
+      total: count,
+      current_page: page,
+      data: orders,
+    };
+
+    return result;
+  }
+
+  public async create({ customer, products }: ICreateOrder): Promise<Order> {
+    const order = this.ormRepository.create({
       customer,
       order_products: products,
     });
 
-    await this.save(order);
+    await this.ormRepository.save(order);
 
     return order;
   }
 }
+
+export default OrdersRepository;
